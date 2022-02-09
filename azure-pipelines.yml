@@ -33,12 +33,7 @@ jobs:
       
 - job: build_ios
   variables:
-  - name: 'ipaPath'
-    value: '$(Build.ArtifactStagingDirectory)/../s/platforms/ios/build/device'
-    readonly: true
-  - name: 'ipaName'
-    value: 'iOS_$(CONFIGURATION)_$(Build.BuildNumber)'
-    readonly: true
+    - group: mobile-app
 
   displayName: "Build iOS IPA"
   dependsOn: Build_JS

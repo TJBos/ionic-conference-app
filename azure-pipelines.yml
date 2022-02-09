@@ -30,3 +30,78 @@ jobs:
       targetPath: '$(Build.ArtifactStagingDirectory)/'
       artifact: 'dist'
       publishLocation: 'pipeline'
+      
+- job: build_ios
+  variables:
+  - name: 'ipaPath'
+    value: '$(Build.ArtifactStagingDirectory)/../s/platforms/ios/build/device'
+    readonly: true
+  - name: 'ipaName'
+    value: 'iOS_$(CONFIGURATION)_$(Build.BuildNumber)'
+    readonly: true
+
+  displayName: "Build iOS IPA"
+  dependsOn: Build_JS
+  condition: succeeded('Build_JS')
+  pool:
+    vmImage: macos-latest
+  
+  steps:
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download build artifact'
+    inputs:
+      buildType: 'current'
+      artifactName: 'dist'
+      targetPath: '$(Build.ArtifactStagingDirectory)'
+  
+  - task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+      destinationFolder: '$(Build.ArtifactStagingDirectory)/'
+      cleanDestinationFolder: false
+
+  - script: |
+      npm install -g @ionic/cli@6.4.0
+    displayName: 'Install Ionic'
+  
+  - script: |
+      npm install -g cordova@9.0.0
+    displayName: 'Install Cordova'
+  
+  - task: CmdLine@2
+    inputs:
+      script: 'cd $(Build.ArtifactStagingDirectory)/s'
+    displayName: 'Change Directory'
+  
+  - task: CmdLine@2
+    inputs:
+      script: 'ionic cordova platform add ios@6.1.0 --save'
+    displayName: 'add ios platform'
+  
+  - task: InstallAppleCertificate@2
+    inputs:
+      certSecureFile: 'fillthisout'
+      certPwd: 'fillthisout'
+      keychain: 'temp'
+    
+  - task: InstallAppleProvisioningProfile@1
+    inputs:
+      provisioningProfileLocation: secureFiles
+      provProfileSecureFile: 'fillthisout'
+
+  - task: CmdLine@2
+    inputs:
+      script: 'ionic cordova build ios --prod'
+    displayName: 'Build iOS'
+  
+  - task: CmdLine@2
+    inputs:
+      script: 'mv $(ipaPath)/MyApp.ipa $(ipaPath)/$(ipaName).ipa'
+    displayName: 'Rename IPA'
+  
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(ipaPath)/$(ipaName).ipa'
+      ArtifactName: $(ipaName)
+  
+  

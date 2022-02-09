@@ -56,11 +56,11 @@ jobs:
       cleanDestinationFolder: false
 
   - script: |
-      npm install -g @ionic/cli@6.4.0
+      npm install -g @ionic/cli@6.18.1
     displayName: 'Install Ionic'
   
   - script: |
-      npm install -g cordova@9.0.0
+      npm install -g cordova@11.0.0
     displayName: 'Install Cordova'
   
   - task: CmdLine@2

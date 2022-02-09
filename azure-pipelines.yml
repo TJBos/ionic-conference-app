@@ -75,33 +75,41 @@ jobs:
   
   - task: CmdLine@2
     inputs:
-      script: 'ionic cordova platform add ios@6.1.0 --save'
+      script: 'ionic cordova platform add ios@6.2.0 --save'
     displayName: 'add ios platform'
   
   - task: InstallAppleCertificate@2
     inputs:
-      certSecureFile: 'fillthisout'
-      certPwd: 'fillthisout'
+      certSecureFile: 'distribute.p12'
+      certPwd: '$(P12password)'
       keychain: 'temp'
     
   - task: InstallAppleProvisioningProfile@1
     inputs:
       provisioningProfileLocation: secureFiles
-      provProfileSecureFile: 'fillthisout'
+      provProfileSecureFile: 'toonworldapp.mobileprovision'
 
   - task: CmdLine@2
     inputs:
       script: 'ionic cordova build ios --prod'
     displayName: 'Build iOS'
   
-  - task: CmdLine@2
+  - task: Xcode@5
     inputs:
-      script: 'mv $(ipaPath)/MyApp.ipa $(ipaPath)/$(ipaName).ipa'
-    displayName: 'Rename IPA'
+      actions: 'build'
+      packageApp: false
+      signingOption: 'manual'
+      signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
+      provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
   
+  - task: CopyFiles@2
+    inputs:
+      contents: '**/*.ipa'
+      targetFolder: '$(build.artifactStagingDirectory)'
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: '$(ipaPath)/$(ipaName).ipa'
-      ArtifactName: $(ipaName)
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
   
   

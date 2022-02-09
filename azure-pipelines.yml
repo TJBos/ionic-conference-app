@@ -1,0 +1,32 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- none
+jobs:
+- job: Build_JS
+  displayName: "Build JS Bundle"
+  pool:
+    vmImage: 'macos-latest'
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+  - script: |
+      npm install
+    displayName: 'npm install'
+  - task: ArchiveFiles@2
+    displayName: 'Archive Source'
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/dest.zip'
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Source'
+    timeoutInMinutes: 1
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/'
+      artifact: 'dist'
+      publishLocation: 'pipeline'

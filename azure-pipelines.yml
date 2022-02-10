@@ -93,6 +93,7 @@ jobs:
     inputs:
       actions: 'build'
       xcWorkspacePath: 'platforms/ios/*.xcworkspace'
+      scheme: 'ToonWorld'
       packageApp: true
       signingOption: 'manual'
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'

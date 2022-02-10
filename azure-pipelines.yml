@@ -92,7 +92,7 @@ jobs:
   - task: Xcode@5
     inputs:
       actions: 'build'
-      xcWorkspacePath: '**/*.xcodeproj/project.xcworkspace'
+      xcWorkspacePath: 'platforms/ios/*.xcworkspace'
       packageApp: true
       signingOption: 'manual'
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'

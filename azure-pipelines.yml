@@ -18,18 +18,18 @@ jobs:
   - script: |
       npm install
     displayName: 'npm install'
-  - task: ArchiveFiles@2
-    displayName: 'Archive Source'
-    inputs:
-      rootFolderOrFile: '$(Build.SourcesDirectory)'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/dest.zip'
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Source'
-    timeoutInMinutes: 1
-    inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)/'
-      artifact: 'dist'
-      publishLocation: 'pipeline'
+  # - task: ArchiveFiles@2
+  #   displayName: 'Archive Source'
+  #   inputs:
+  #     rootFolderOrFile: '$(Build.SourcesDirectory)'
+  #     archiveFile: '$(Build.ArtifactStagingDirectory)/dest.zip'
+  # - task: PublishPipelineArtifact@1
+  #   displayName: 'Publish Source'
+  #   timeoutInMinutes: 1
+  #   inputs:
+  #     targetPath: '$(Build.ArtifactStagingDirectory)/'
+  #     artifact: 'dist'
+  #     publishLocation: 'pipeline'
       
 - job: build_ios
   variables:
@@ -42,18 +42,18 @@ jobs:
     vmImage: macos-latest
   
   steps:
-  - task: DownloadPipelineArtifact@2
-    displayName: 'Download build artifact'
-    inputs:
-      buildType: 'current'
-      artifactName: 'dist'
-      targetPath: '$(Build.ArtifactStagingDirectory)'
+  # - task: DownloadPipelineArtifact@2
+  #   displayName: 'Download build artifact'
+  #   inputs:
+  #     buildType: 'current'
+  #     artifactName: 'dist'
+  #     targetPath: '$(Build.ArtifactStagingDirectory)'
   
-  - task: ExtractFiles@1
-    inputs:
-      archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/*.zip'
-      destinationFolder: '$(Build.ArtifactStagingDirectory)/'
-      cleanDestinationFolder: false
+  # - task: ExtractFiles@1
+  #   inputs:
+  #     archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+  #     destinationFolder: '$(Build.ArtifactStagingDirectory)/'
+  #     cleanDestinationFolder: false
 
   - script: |
       npm install -g @ionic/cli@6.18.1
@@ -63,10 +63,10 @@ jobs:
       npm install -g cordova@11.0.0
     displayName: 'Install Cordova'
   
-  - task: CmdLine@2
-    inputs:
-      script: 'cd $(Build.ArtifactStagingDirectory)/s'
-    displayName: 'Change Directory'
+  # - task: CmdLine@2
+  #   inputs:
+  #     script: 'cd $(Build.ArtifactStagingDirectory)/s'
+  #   displayName: 'Change Directory'
   
   - task: CmdLine@2
     inputs:
@@ -84,15 +84,16 @@ jobs:
       provisioningProfileLocation: secureFiles
       provProfileSecureFile: 'toonworldapp.mobileprovision'
 
-  - task: CmdLine@2
-    inputs:
-      script: 'ionic cordova build ios --prod'
-    displayName: 'Build iOS'
+  # - task: CmdLine@2
+  #   inputs:
+  #     script: 'ionic cordova build ios --prod'
+  #   displayName: 'Build iOS'
   
   - task: Xcode@5
     inputs:
       actions: 'build'
-      packageApp: false
+      xcWorkspacePath: '**/*.xcodeproj/project.xcworkspace'
+      packageApp: true
       signingOption: 'manual'
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
       provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'

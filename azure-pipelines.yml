@@ -94,6 +94,8 @@ jobs:
       actions: 'build'
       xcWorkspacePath: 'platforms/ios/*.xcworkspace'
       scheme: 'ToonWorld'
+      sdk: 'iphoneos'
+      configuration: 'Release'
       packageApp: true
       signingOption: 'manual'
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
@@ -109,4 +111,12 @@ jobs:
       ArtifactName: 'drop'
       publishLocation: 'Container'
   
-  
+  - task: AppCenterDistribute@3
+    inputs:
+      serverEndpoint: 'AppCenter'
+      appSlug: 'toonbosmans/ToonWorld'
+      appFile: '$(Build.ArtifactStagingDirectory)/*.ipa'
+      releaseNotesOption: 'input'
+      releaseNotesInput: 'This is a test'
+      destinationType: 'store'
+      destinationStoreId: 'fillthisout'

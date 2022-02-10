@@ -111,12 +111,12 @@ jobs:
       ArtifactName: 'drop'
       publishLocation: 'Container'
   
-  - task: AppCenterDistribute@3
-    inputs:
-      serverEndpoint: 'AppCenter'
-      appSlug: 'toonbosmans/ToonWorld'
-      appFile: '$(Build.ArtifactStagingDirectory)/*.ipa'
-      releaseNotesOption: 'input'
-      releaseNotesInput: 'This is a test'
-      destinationType: 'store'
-      destinationStoreId: 'fillthisout'
+  # - task: AppCenterDistribute@3
+  #   inputs:
+  #     serverEndpoint: 'AppCenter'
+  #     appSlug: 'toonbosmans/ToonWorld'
+  #     appFile: '$(Build.ArtifactStagingDirectory)/*.ipa'
+  #     releaseNotesOption: 'input'
+  #     releaseNotesInput: 'This is a test'
+  #     destinationType: 'store'
+  #     destinationStoreId: 'fillthisout'

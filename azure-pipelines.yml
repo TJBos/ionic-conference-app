@@ -70,7 +70,7 @@ jobs:
   
   - task: CmdLine@2
     inputs:
-      script: 'ionic cordova platform add ios@6.2.0 --save'
+      script: 'ionic cordova platform add ios@5.1.1 --save'
     displayName: 'add ios platform'
   
   - task: InstallAppleCertificate@2
